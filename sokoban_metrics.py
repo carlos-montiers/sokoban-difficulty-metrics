@@ -14,11 +14,15 @@ def clean_lines(text):
 
 def is_board_line(line):
     stripped = line.strip()
-    return any(c in stripped for c in "#$@*+.") if stripped and not stripped.startswith("::") else False
+    if stripped == "" or stripped.startswith("::"):
+        return False
+    return all(c in "#$@*+. " for c in stripped)
 
 def is_solution_line(line):
     stripped = line.strip()
-    return any(c in stripped for c in "LURDlurd") if stripped and not stripped.startswith("::") else False
+    if stripped == "" or stripped.startswith("::"):
+        return False
+    return all(c in "LURDlurd" for c in stripped)
 
 def parse_levels(lines):
     parsed_levels = []
