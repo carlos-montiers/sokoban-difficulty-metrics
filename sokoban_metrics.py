@@ -16,7 +16,7 @@ def is_board_line(line):
     stripped = line.strip()
     if stripped == "" or stripped.startswith("::"):
         return False
-    return all(c in "#$@*+. " for c in stripped)
+    return all(c in "#$@*+. _-" for c in stripped)
 
 def is_solution_line(line):
     stripped = line.strip()
