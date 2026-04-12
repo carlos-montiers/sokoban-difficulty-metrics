@@ -59,11 +59,35 @@ def parse_levels(lines):
             parsed_levels.append((level_name, grid_lines, solution_moves))
     return parsed_levels
 
+def compute_floor_inside(grid, start_pos):
+    queue = deque([start_pos])
+    visited = {start_pos}
+    count = 0
+
+    while queue:
+        x, y = queue.popleft()
+        if grid[y][x] != WALL:
+            count += 1
+
+        for dx, dy in DIRECTIONS.values():
+            nx, ny = x + dx, y + dy
+            if (nx, ny) in visited:
+                continue
+            if ny < 0 or ny >= len(grid) or nx < 0 or nx >= len(grid[0]):
+                continue
+            if grid[ny][nx] == WALL:
+                continue
+
+            visited.add((nx, ny))
+            queue.append((nx, ny))
+
+    return count
+
 def build_state(grid_lines):
     width = max(len(row) for row in grid_lines)
     grid = [list(row.ljust(width, WALL)) for row in grid_lines]
     box_positions, goal_positions = {}, set()
-    player_pos, next_box_id, floor_count = None, 0, 0
+    player_pos, next_box_id = None, 0
     for y, row in enumerate(grid):
         for x, cell in enumerate(row):
             if cell in ('$', '*'):
@@ -71,10 +95,10 @@ def build_state(grid_lines):
                 next_box_id += 1
             if cell in ('.', '*', '+'): goal_positions.add((x, y))
             if cell in ('@', '+'): player_pos = (x, y)
-            if cell != WALL:
-                floor_count += 1
-                grid[y][x] = ' '
-            else: grid[y][x] = WALL
+            # normalize grid
+            grid[y][x] = WALL if cell == WALL else ' '
+    # compute only reachable floor
+    floor_count = compute_floor_inside(grid, player_pos)
     return grid, box_positions, player_pos, goal_positions, floor_count
 
 def reachable_positions(grid, box_positions, start_pos):
