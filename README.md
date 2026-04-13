@@ -28,6 +28,8 @@ Evaluated 8 puzzles from Aymeric du Peloux's Microcosmos and Minicosmos collecti
 The **deadlock-guidance** metric proved particularly useful for comparing difficulty—higher values indicate easier puzzles where the structure naturally guides players away from deadlock situations.
 More details here: https://groups.io/g/sokoban/message/1186
 
+Note: Sorting primarily follows deadlock-guidance from higher to lower. When values are very close (e.g., 0.273, 0.278, or 0.15, 0.143, 0.158), avg-valid-push-directions is used as the first tie-breaker (higher to lower). Only if values remain very close after this step is air used as a secondary tie-breaker (also higher to lower). This is subject to further analysis. In these cases, lower values may indicate higher difficulty.
+
 Programmed with LLM assistance, then manually fixed and verified.
 
 ## Usage
