@@ -216,7 +216,7 @@ def simulate(grid, init_boxes, p_start, goals, safe, floor_count, solution):
 
     task_switching = round(box_switches / num_boxes, 2) if num_boxes > 0 else 0
     avg_valid_push_directions = round(total_valid_opts / valid_push_count if valid_push_count > 0 else 0, 2)
-    deadlock_guidance = round(logical_pushes / box_line_cnt, 2) if box_line_cnt > 0 else 0
+    deadlock_guidance = round(logical_pushes / box_line_cnt, 3) if box_line_cnt > 0 else 0
 
     return [
         num_boxes, floor_count, len(moves_list), push_total, box_line_cnt, box_switches,
