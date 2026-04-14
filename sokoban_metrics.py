@@ -175,7 +175,7 @@ def simulate(grid, init_boxes, p_start, goals, safe, floor_count, solution):
     curr_boxes = dict(init_boxes)
     p_pos = p_start
     box_origins = {bid: pos for pos, bid in init_boxes.items()}
-    push_total, box_switches, sessions, dir_changes, box_line_cnt = 0, 0, 0, 0, 0
+    pushes, box_switches, sessions, dir_changes, box_lines = 0, 0, 0, 0, 0
     logical_pushes, total_valid_opts, valid_push_count = 0, 0, 0
     max_detours = {bid: 0 for bid in init_boxes.values()}
     last_m_dir, last_b_id, is_pushing = None, None, False
@@ -188,7 +188,7 @@ def simulate(grid, init_boxes, p_start, goals, safe, floor_count, solution):
         next_p = (p_pos[0] + dx, p_pos[1] + dy)
         if m.isupper():
             global_push_idx += 1
-            push_total += 1
+            pushes += 1
             bid = curr_boxes[next_p]
             next_b = (next_p[0] + dx, next_p[1] + dy)
             if global_push_idx < final_travel_start.get(bid, float('inf')):
@@ -202,7 +202,7 @@ def simulate(grid, init_boxes, p_start, goals, safe, floor_count, solution):
                 sessions += 1
                 is_pushing = True
             if last_b_id != bid: box_switches += 1
-            if last_b_id != bid or last_m_dir != m_low: box_line_cnt += 1
+            if last_b_id != bid or last_m_dir != m_low: box_lines += 1
             del curr_boxes[next_p]
             curr_boxes[next_b] = bid
             last_b_id = bid
@@ -210,19 +210,23 @@ def simulate(grid, init_boxes, p_start, goals, safe, floor_count, solution):
         p_pos = next_p
         last_m_dir = m_low
 
-    box_detour = round(sum(max_detours.values()) / len(max_detours) if max_detours else 0, 2)
-
-    air = round(floor_count / num_boxes, 2) if num_boxes > 0 else 0
-
-    task_switching = round(box_switches / num_boxes, 2) if num_boxes > 0 else 0
-    avg_valid_push_directions = round(total_valid_opts / valid_push_count if valid_push_count > 0 else 0, 2)
-    deadlock_guidance = round(logical_pushes / box_line_cnt, 3) if box_line_cnt > 0 else 0
+    moves = len(moves_list)
+    box_detour = sum(max_detours.values()) / len(max_detours) if max_detours else 0
+    air = (floor_count / num_boxes) if num_boxes > 0 else 0
+    task_switching = (box_switches / num_boxes) if num_boxes > 0 else 0
+    avg_valid_push_directions = (total_valid_opts / valid_push_count) if valid_push_count > 0 else 0
+    deadlock_guidance = (logical_pushes / box_lines) if box_lines > 0 else 0
 
     return [
-        num_boxes, floor_count, len(moves_list), push_total, box_line_cnt, box_switches,
+        num_boxes, floor_count,
+        moves, pushes, box_lines, box_switches,
         sessions, dir_changes,
-        logical_pushes, box_detour, air,
-        task_switching, avg_valid_push_directions, deadlock_guidance
+        logical_pushes,
+        round(box_detour, 2),
+        round(air, 2),
+        round(task_switching, 2),
+        round(avg_valid_push_directions, 2),
+        round(deadlock_guidance, 3)
     ]
 
 def main():
