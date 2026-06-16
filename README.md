@@ -10,6 +10,15 @@ Metrics designed by Carlos Montiers Aguilera to reflect human-solving difficulty
 - **Avg valid push directions**: The average number of positions a box can be pushed each time the player pushes it. Pushes to the final goal are not considered. This reflects the number of decisions a player considered and ignored when choosing a particular push. For example, the player could push this box to 10 positions; the next time, to 5 positions. This is used to calculate the average.
 - **Deadlock guidance**: Logical pushes / Box lines (straight line box pushes). This indicates how much the puzzle structure helps to solve the puzzle. A higher value indicates an easier level (for players who consider this or who play with deadlock detection enabled).
 
+Classic metrics:
+
+- **Moves**: Number of pusher moves.
+- **Pushes**: Number of box pushes.
+- **Box lines**: Straight line box pushes.
+- **Box changes**: Changing focus from one box to another.
+- **Pushing sessions**: Changing from moving the pusher to pushing the boxes.
+- **Pusher lines**: Straight line pusher moves.
+
 ### Analysis Example
 
 Evaluated 8 puzzles from Aymeric du Peloux's Microcosmos and Minicosmos collections:
