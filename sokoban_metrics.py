@@ -42,16 +42,11 @@ def parse_levels(lines):
             grid_lines.append(lines[index])
             index += 1
         solution_moves = ""
-        while index < len(lines) and "solution" not in lines[index].lower():
-            if is_board_line(lines[index]): break
+        while index < len(lines) and lines[index] == "":
             index += 1
         if index < len(lines) and "solution" in lines[index].lower():
             index += 1
-            while index < len(lines) and is_solution_line(lines[index]):
-                solution_moves += lines[index].strip()
-                index += 1
-        else:
-            while index < len(lines) and is_solution_line(lines[index]):
+        while index < len(lines) and is_solution_line(lines[index]):
                 solution_moves += lines[index].strip()
                 index += 1
         if grid_lines:
