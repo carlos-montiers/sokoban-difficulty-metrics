@@ -169,7 +169,7 @@ def simulate(grid, init_boxes, p_start, goals, safe, floor_count, solution):
     curr_boxes = dict(init_boxes)
     p_pos = p_start
     box_origins = {bid: pos for pos, bid in init_boxes.items()}
-    pushes, box_switches, sessions, dir_changes, box_lines = 0, 0, 0, 0, 0
+    pushes, box_switches, pushing_sessions, pusher_lines, box_lines = 0, 0, 0, 0, 0
     logical_pushes, total_valid_opts, valid_push_count = 0, 0, 0
     max_detours = {bid: 0 for bid in init_boxes.values()}
     last_m_dir, last_b_id, is_pushing = None, None, False
@@ -178,7 +178,7 @@ def simulate(grid, init_boxes, p_start, goals, safe, floor_count, solution):
     for m in moves_list:
         m_low = m.lower()
         dx, dy = DIRECTIONS[m_low]
-        if m_low != last_m_dir: dir_changes += 1
+        if m_low != last_m_dir: pusher_lines += 1
         next_p = (p_pos[0] + dx, p_pos[1] + dy)
         if m.isupper():
             global_push_idx += 1
@@ -193,7 +193,7 @@ def simulate(grid, init_boxes, p_start, goals, safe, floor_count, solution):
                 dist = abs(next_b[0] - box_origins[bid][0]) + abs(next_b[1] - box_origins[bid][1])
                 if dist > max_detours[bid]: max_detours[bid] = dist
             if not is_pushing:
-                sessions += 1
+                pushing_sessions += 1
                 is_pushing = True
             if last_b_id != bid: box_switches += 1
             if last_b_id != bid or last_m_dir != m_low: box_lines += 1
@@ -214,7 +214,7 @@ def simulate(grid, init_boxes, p_start, goals, safe, floor_count, solution):
     return [
         num_boxes, floor_count,
         moves, pushes, box_lines, box_switches,
-        sessions, dir_changes,
+        pushing_sessions, pusher_lines,
         logical_pushes,
         round(box_detour, 2),
         round(air, 2),
